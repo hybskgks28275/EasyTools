@@ -8,7 +8,7 @@ set DOWNLOAD_FILE=%~2
 set DOWNLOAD_ZIP_FILE=%~n2.zip
 set MODEL_ID=%~3
 set VERSION_ID=%~4
-set "MODEL_URL=https://civitai.com/models/%MODEL_ID%?modelVersionId=%VERSION_ID%"
+set "MODEL_URL=https://civitai.red/models/%MODEL_ID%?modelVersionId=%VERSION_ID%"
 
 if exist "%DOWNLOAD_DIR%%DOWNLOAD_FILE%" (
 	if exist "%~dp0..\Download\ARIA_USE_CURL" (

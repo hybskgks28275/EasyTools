@@ -27,9 +27,8 @@ if %ERRORLEVEL% neq 0 ( exit /b 1 )
 pushd ComfyUI
 
 @REM https://github.com/comfyanonymous/ComfyUI#manual-install-windows-linux
-@REM https://github.com/cubiq/ComfyUI_essentials build reqireds Python 3.12.9
 if not exist "%EASY_TOOLS%\Python\Python_DefaultVersion.txt" (
-	echo 3.10.6> "%EASY_TOOLS%\Python\Python_DefaultVersion.txt"
+	echo 3.13.13> "%EASY_TOOLS%\Python\Python_DefaultVersion.txt"
 )
 call %PYTHON_ACTIVATE%
 if %ERRORLEVEL% neq 0 ( popd & exit /b 1 )
@@ -49,16 +48,16 @@ if %ERRORLEVEL% neq 0 ( pause & popd & exit /b 1 )
 if exist "%~dp0PytorchVersionControl-Disabled.txt" ( goto :SKIP_PYTORCH_VERSION_CONTROL )
 
 if not exist "%~dp0Torch_Version.txt" (
-	echo torch==2.7.1+cu128 torchvision==0.22.1+cu128 torchaudio==2.7.1+cu128 --index-url https://download.pytorch.org/whl/cu128> "%~dp0Torch_Version.txt"
+	echo torch==2.11.0+cu130 torchvision==0.26.0+cu130 torchaudio==2.11.0+cu130 --index-url https://download.pytorch.org/whl/cu130> "%~dp0Torch_Version.txt"
 )
 set /p TORCH_VERSION=<"%~dp0Torch_Version.txt"
 echo pip install -qq %TORCH_VERSION%
 pip install -qq %TORCH_VERSION%
 if %ERRORLEVEL% neq 0 ( pause & popd & exit /b 1 )
 
-@REM https://github.com/woct0rdho/triton-windows/releases
+@REM https://github.com/triton-lang/triton-windows
 if not exist "%~dp0Triton_Version.txt" (
-	echo triton-windows==3.3.1.post19> "%~dp0Triton_Version.txt"
+	echo triton-windows==3.6.0.post26> "%~dp0Triton_Version.txt"
 )
 set /p TRITON_VERSION=<"%~dp0Triton_Version.txt"
 echo pip install -qq %TRITON_VERSION%
@@ -89,12 +88,15 @@ if exist %EASY_PORTABLE_PYTHON_DIR%\ (
 
 @REM https://github.com/woct0rdho/SageAttention/releases
 if not exist "%~dp0SageAttention_Version.txt" (
-	echo https://github.com/woct0rdho/SageAttention/releases/download/v2.2.0-windows.post2/sageattention-2.2.0+cu128torch2.7.1.post2-cp39-abi3-win_amd64.whl> "%~dp0SageAttention_Version.txt"
+	echo https://github.com/woct0rdho/SageAttention/releases/download/v2.2.0-windows.post4/sageattention-2.2.0+cu130torch2.9.0andhigher.post4-cp39-abi3-win_amd64.whl> "%~dp0SageAttention_Version.txt"
 )
 set /p SAGE_ATTENTION_VERSION=<"%~dp0SageAttention_Version.txt"
 echo pip install -qq %SAGE_ATTENTION_VERSION%
 pip install -qq %SAGE_ATTENTION_VERSION%
-if %ERRORLEVEL% neq 0 ( pause & popd & exit /b 1 )
+if %ERRORLEVEL% neq 0 (
+	echo "[WARN] SageAttention のインストールに失敗しました。ComfyUI の基本セットアップは続行します。"
+	echo "[WARN] Failed to install SageAttention. Continuing the base ComfyUI setup."
+)
 
 :SKIP_PYTORCH_VERSION_CONTROL
 
