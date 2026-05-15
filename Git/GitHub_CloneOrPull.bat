@@ -11,9 +11,6 @@ if %ERRORLEVEL% neq 0 ( exit /b 1 )
 
 if "%GITHUB_HASH%"=="" ( exit /b 0 )
 
-set GITHUB_HASH_BRANCH=%GITHUB_HASH:~0,7%
-echo git -C %GITHUB_PRODUCT% switch -C %GITHUB_HASH_BRANCH% %GITHUB_HASH%
-git -C %GITHUB_PRODUCT% switch -C %GITHUB_HASH_BRANCH% %GITHUB_HASH%
-if %ERRORLEVEL% neq 0 ( pause & exit /b 1 )
+echo "[INFO] Skip switching %GITHUB_PRODUCT% to hash %GITHUB_HASH%."
 
 exit /b 0
