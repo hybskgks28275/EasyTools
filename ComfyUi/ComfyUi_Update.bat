@@ -87,16 +87,26 @@ if exist %EASY_PORTABLE_PYTHON_DIR%\ (
 )
 
 @REM https://github.com/woct0rdho/SageAttention/releases
+set "SAGE_ATTENTION_DEFAULT=https://github.com/woct0rdho/SageAttention/releases/download/v2.2.0-windows.post4/sageattention-2.2.0+cu130torch2.9.0andhigher.post4-cp39-abi3-win_amd64.whl"
 if not exist "%~dp0SageAttention_Version.txt" (
-	echo https://github.com/woct0rdho/SageAttention/releases/download/v2.2.0-windows.post4/sageattention-2.2.0+cu130torch2.9.0andhigher.post4-cp39-abi3-win_amd64.whl> "%~dp0SageAttention_Version.txt"
+	echo %SAGE_ATTENTION_DEFAULT%> "%~dp0SageAttention_Version.txt"
 )
+set "SAGE_ATTENTION_VERSION="
 set /p SAGE_ATTENTION_VERSION=<"%~dp0SageAttention_Version.txt"
-echo pip install -qq %SAGE_ATTENTION_VERSION%
-pip install -qq %SAGE_ATTENTION_VERSION%
-if %ERRORLEVEL% neq 0 (
-	echo "[WARN] SageAttention のインストールに失敗しました。ComfyUI の基本セットアップは続行します。"
-	echo "[WARN] Failed to install SageAttention. Continuing the base ComfyUI setup."
+if "%SAGE_ATTENTION_VERSION%"=="" (
+	echo %SAGE_ATTENTION_DEFAULT%> "%~dp0SageAttention_Version.txt"
+	set "SAGE_ATTENTION_VERSION=%SAGE_ATTENTION_DEFAULT%"
 )
+echo python -m pip install -qq "%SAGE_ATTENTION_VERSION%"
+python -m pip install -qq "%SAGE_ATTENTION_VERSION%"
+if %ERRORLEVEL% neq 0 ( goto :SAGE_ATTENTION_INSTALL_FAILED )
+goto :SAGE_ATTENTION_INSTALL_FINISHED
+
+:SAGE_ATTENTION_INSTALL_FAILED
+echo [WARN] Failed to install SageAttention.
+echo [WARN] Continuing the base ComfyUI setup.
+
+:SAGE_ATTENTION_INSTALL_FINISHED
 
 :SKIP_PYTORCH_VERSION_CONTROL
 
@@ -115,7 +125,18 @@ if exist "%~dp0ComfyUiManager_Version.txt" (
 :SKIP_COMFYUI_MANAGER_VERSION_CONTROL
 
 @REM https://github.com/Comfy-Org/ComfyUI-Manager
+if exist ComfyUI-Manager\ if not exist ComfyUI-Manager\__init__.py (
+	echo "[WARN] ComfyUI-Manager is incomplete. Reinstalling ComfyUI-Manager."
+	echo rmdir /S /Q ComfyUI-Manager
+	rmdir /S /Q ComfyUI-Manager
+	if %ERRORLEVEL% neq 0 ( pause & popd & exit /b 1 )
+)
 call %GITHUB_CLONE_OR_PULL_TAG% Comfy-Org ComfyUI-Manager main %COMFYUI_MANAGER_VERSION%
 if %ERRORLEVEL% neq 0 ( popd & exit /b 1 )
+if not exist ComfyUI-Manager\__init__.py (
+	echo "[ERROR] ComfyUI-Manager\__init__.py が見つかりません。ComfyUI-Manager の取得に失敗しました。"
+	echo "[ERROR] ComfyUI-Manager\__init__.py was not found. Failed to install ComfyUI-Manager."
+	pause & popd & exit /b 1
+)
 
 popd rem ComfyUI\custom_nodes

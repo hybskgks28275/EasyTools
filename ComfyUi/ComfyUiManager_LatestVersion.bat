@@ -4,8 +4,8 @@ set PS_CMD=PowerShell -Version 5.1 -NoProfile -ExecutionPolicy Bypass
 
 %PS_CMD% -c "& { try { (Invoke-WebRequest -Uri 'https://api.github.com/repos/Comfy-Org/ComfyUI-Manager/tags' | ConvertFrom-Json)[0].name } catch { exit 1 } }" >nul 2>&1
 if %ERRORLEVEL% neq 0 (
-	echo "[ERROR] ComfyUI-Manager の最新バージョンの取得に失敗しました。"
-	pause & exit /b 1
+	echo "[WARN] Failed to get the latest ComfyUI-Manager version."
+	exit /b 0
 )
 
 set COMFYUI_MANAGER_LATEST_VERSION=

@@ -11,9 +11,6 @@ if %ERRORLEVEL% neq 0 ( exit /b 1 )
 
 if "%GITHUB_TAG%"=="" ( exit /b 0 )
 
-
-echo git -C %GITHUB_PRODUCT% switch -C %GITHUB_TAG% tags/%GITHUB_TAG%
-git -C %GITHUB_PRODUCT% switch -C %GITHUB_TAG% tags/%GITHUB_TAG%
-if %ERRORLEVEL% neq 0 ( pause & exit /b 1 )
+echo "[INFO] Skip switching %GITHUB_PRODUCT% to tag %GITHUB_TAG%."
 
 exit /b 0

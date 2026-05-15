@@ -12,15 +12,9 @@ for /f "tokens=*" %%i in ("%GIT_CLONE_OR_PULL_URL%") do set GIT_CLONE_OR_PULL_DI
 
 for /f "delims=" %%i in ('git -C %GIT_CLONE_OR_PULL_DIR% config --get remote.origin.url') do set "REMOTE_ORIGIN_URL=%%i"
 
-set BRANCH_NAME=%2
 if exist %GIT_CLONE_OR_PULL_DIR%\ (
 	setlocal enabledelayedexpansion
 	if "%GIT_CLONE_OR_PULL_URL%"=="%REMOTE_ORIGIN_URL%" (
-		if "%BRANCH_NAME%" neq "" (
-			echo git -C %GIT_CLONE_OR_PULL_DIR% switch -f %BRANCH_NAME% --quiet
-			git -C %GIT_CLONE_OR_PULL_DIR% switch -f %BRANCH_NAME% --quiet
-		)
-
 		echo git -C %GIT_CLONE_OR_PULL_DIR% pull
 		git -C %GIT_CLONE_OR_PULL_DIR% pull
 		if !ERRORLEVEL! neq 0 ( pause & endlocal & exit /b 1 )
