@@ -10,7 +10,7 @@ echo.
 echo "Copy and paste the API Key from your Civitai account settings."
 echo "Save the Civitai API Key to %CIVITAI_API_KEY_FILE%."
 echo.
-echo "1. Ctrl + Click => https://civitai.com/user/account"
+echo "1. Ctrl + Click => https://civitai.red/user/account"
 echo "2. [API Keys] => [Add API key]"
 echo "3. [Name] easy => [Save]"
 echo "4. Click API Key to copy => Ctrl + V here"

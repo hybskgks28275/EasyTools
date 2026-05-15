@@ -5,10 +5,10 @@ set CURL_CMD=C:\Windows\System32\curl.exe -kL
 set PYTHON_CMD=python
 set PYTHONUTF8=1
 
-@REM set EASY_PYTHON_VERSION=3.10.6
-@REM 3.10.6, 3.12.9
+@REM set EASY_PYTHON_VERSION=3.13.13
+@REM 3.13.13
 if not exist "%~dp0Python_DefaultVersion.txt" (
-	echo 3.10.6> "%~dp0Python_DefaultVersion.txt"
+	echo 3.13.13> "%~dp0Python_DefaultVersion.txt"
 )
 
 if "%EASY_PYTHON_VERSION%" == "" (
@@ -68,7 +68,7 @@ if not "%PYTHON_VERSION_VAR:~7,5%"=="%EASY_PYTHON_MINOR_VERSION%" (
 		if !ERRORLEVEL! neq 0 ( pause & endlocal & exit /b 1 )
 	)
 
-	if not exist %EASY_PORTABLE_PYTHON_DIR%\include\Python.h (
+	if exist "%~dp0python_include_libs-%EASY_PYTHON_VERSION%.zip" if not exist %EASY_PORTABLE_PYTHON_DIR%\include\Python.h (
 		echo %PS_CMD% Expand-Archive -Force -Path %~dp0python_include_libs-%EASY_PYTHON_VERSION%.zip -DestinationPath %EASY_PORTABLE_PYTHON_DIR%
 		%PS_CMD% Expand-Archive -Force -Path %~dp0python_include_libs-%EASY_PYTHON_VERSION%.zip -DestinationPath %EASY_PORTABLE_PYTHON_DIR%
 		if !ERRORLEVEL! neq 0 ( pause & endlocal & exit /b 1 )
@@ -109,7 +109,7 @@ if not exist %VIRTUAL_ENV_DIR%\ (
 
 if exist %EASY_PORTABLE_PYTHON_DIR%\ (
 	@REM tcc.exe & VS Build Tools cl.exe
-	if not exist %VIRTUAL_ENV_DIR%\Scripts\Include\Python.h (
+	if exist %EASY_PORTABLE_PYTHON_DIR%\include\Python.h if not exist %VIRTUAL_ENV_DIR%\Scripts\Include\Python.h (
 		echo xcopy /SQY %EASY_PORTABLE_PYTHON_DIR%\include\*.* %VIRTUAL_ENV_DIR%\Scripts\Include\
 		xcopy /SQY %EASY_PORTABLE_PYTHON_DIR%\include\*.* %VIRTUAL_ENV_DIR%\Scripts\Include\
 
