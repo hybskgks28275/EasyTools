@@ -125,18 +125,22 @@ if exist "%~dp0ComfyUiManager_Version.txt" (
 :SKIP_COMFYUI_MANAGER_VERSION_CONTROL
 
 @REM https://github.com/Comfy-Org/ComfyUI-Manager
-if exist ComfyUI-Manager\ if not exist ComfyUI-Manager\__init__.py (
-	echo "[WARN] ComfyUI-Manager is incomplete. Reinstalling ComfyUI-Manager."
-	echo rmdir /S /Q ComfyUI-Manager
-	rmdir /S /Q ComfyUI-Manager
-	if %ERRORLEVEL% neq 0 ( pause & popd & exit /b 1 )
-)
+if not exist "ComfyUI-Manager\" ( goto :INSTALL_COMFYUI_MANAGER )
+if exist "ComfyUI-Manager\__init__.py" ( goto :INSTALL_COMFYUI_MANAGER )
+
+echo [WARN] ComfyUI-Manager is incomplete. Reinstalling ComfyUI-Manager.
+echo rmdir /S /Q "ComfyUI-Manager"
+rmdir /S /Q "ComfyUI-Manager"
+if %ERRORLEVEL% neq 0 ( pause & popd & exit /b 1 )
+
+:INSTALL_COMFYUI_MANAGER
 call %GITHUB_CLONE_OR_PULL_TAG% Comfy-Org ComfyUI-Manager main %COMFYUI_MANAGER_VERSION%
 if %ERRORLEVEL% neq 0 ( popd & exit /b 1 )
-if not exist ComfyUI-Manager\__init__.py (
-	echo "[ERROR] ComfyUI-Manager\__init__.py が見つかりません。ComfyUI-Manager の取得に失敗しました。"
-	echo "[ERROR] ComfyUI-Manager\__init__.py was not found. Failed to install ComfyUI-Manager."
-	pause & popd & exit /b 1
-)
+if exist "ComfyUI-Manager\__init__.py" ( goto :COMFYUI_MANAGER_INSTALLED )
+echo [ERROR] ComfyUI-Manager\__init__.py was not found.
+echo [ERROR] Failed to install ComfyUI-Manager.
+pause & popd & exit /b 1
+
+:COMFYUI_MANAGER_INSTALLED
 
 popd rem ComfyUI\custom_nodes
